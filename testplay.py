@@ -2,7 +2,7 @@ import numpy as np
 import random
 import puyothon as puyo
 from Actor import Actor
-from deep import makeModel, Res_Block
+from model import makeModel, Res_Block
 import time
 import tensorflow as tf
 import datetime

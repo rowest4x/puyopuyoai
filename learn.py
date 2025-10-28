@@ -4,7 +4,7 @@ import puyothon as puyo
 from Player import Player
 from Actor import Actor
 from TsumoLoader import TsumoLoader
-from deep import makeModel, Res_Block
+from model import makeModel, Res_Block
 import time
 import tensorflow as tf
 from itertools import permutations
