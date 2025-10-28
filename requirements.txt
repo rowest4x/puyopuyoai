@@ -1,0 +1,4 @@
+numpy>=1.21
+tensorflow>=2.14
+flask>=3.0
+git+https://github.com/rowest4x/puyothon.git

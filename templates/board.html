@@ -1,0 +1,15 @@
+<div class="board">
+    {% for row in board %}
+    {% set i = loop.index0 %}
+        {% for cell in row %}
+        {% set j = loop.index0 %}
+            <div {% if i < 2 and j < 8 and j != 3 %}class="dark_cell"{% else %}class="cell"{% endif %}>
+                <img src="{{ image_map[cell] }}" alt="{{ cell }}">
+            </div>
+        {% endfor %}
+    {% endfor %}
+</div>
+
+<div class="score">{{score}}</div>
+
+<div class="chain_count">{{all_clear}}<br>{{chain_count}}</div>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ぷよぷよ</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin: 32px;
+        }
+        .container {
+            display: flex;
+            gap: 32px;
+        }
+        .board-container {
+            flex-grow: 1;
+        }
+        .ui-container {
+            width: 300px;
+        }
+        .board {
+            display: grid;
+            grid-template-columns: repeat(9, 32px);
+            grid-template-rows: repeat(15, 32px);
+            background-color: white;
+            width: max-content;
+        }
+        .cell img {
+            width: 32px;
+            height: 32px;
+        }
+        .dark_cell img {
+            width: 32px;
+            height: 32px;
+            filter: brightness(50%);
+        }
+        .score {
+            width: 256px;
+            text-align: right;
+            font-size: 38px;
+            font-family: "Arial";
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        .chain_count {
+            width: 256px;
+            text-align: center;
+            font-size: 34px;
+            font-family: "Arial Black";
+            font-weight: bold;
+            position:absolute;
+            -webkit-text-fill-color: white;
+            -webkit-text-stroke-width: 2px;
+            -webkit-text-stroke-color: black;
+            top: 192px;
+        }
+        .turn-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 盤面を表示する場所 -->
+    <div class="board-container" id="boardContainer">
+        {% include "board.html" %}
+    </div>
+
+    <!-- UI 部分 -->
+    <div class="ui-container">
+
+        <!-- tsumoファイル / actionファイル 選択UI -->
+        <form method="post">
+            <label>ファイル:</label>
+            <select name="log_dir" required>
+                {% for dir in dirs %}
+                    <option value="{{dir}}" {% if dir == log_dir %}selected{% endif %}>{{dir}}</option>
+                {% endfor %}
+            </select><br>
+            <button type="submit">ファイル読み込み</button>
+        </form>
+
+        <br>
+        <hr>
+        <br>
+
+        <!-- ゲーム番号選択UI -->
+        {% if game_num > 0 %}
+            <form method="post">
+                <input type="hidden" name="log_dir" value="{{log_dir}}">
+
+                {{game_num}}ゲームのデータがあります。<br>0以上{{game_num-1}}以下でどのゲームを表示するか選んでください。<br>
+                ゲーム番号：
+                <input type="number" name="game_id" value="{{game_id}}" min="0" max="{{game_num-1}}" style="width: 80px; height: 30px;">
+                <button type="submit">決定</button>
+            </form>
+        {% endif %}
+
+        <br>
+        <hr>
+        <br>
+
+        <!-- ターン選択 UI -->
+        <div>
+            ターン（連鎖中含む）
+            <div class="turn-control">
+                <button class="turn-button" id="prevTurn">−</button>
+                <input type="number" id="turnInput" class="turn-input" value="0" min="0" max="{{max_turn}}" style="width: 80px; height: 30px;">
+                <button class="turn-button" id="nextTurn">＋</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let turnInput = document.getElementById("turnInput");
+    let prevTurnButton = document.getElementById("prevTurn");
+    let nextTurnButton = document.getElementById("nextTurn");
+    let boardContainer = document.getElementById("boardContainer");
+
+    function updateBoard(turn) {
+        fetch(`/get_board/${turn}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.html) {
+                    boardContainer.innerHTML = data.html;
+                }
+            });
+    }
+
+    turnInput.addEventListener("input", function() {
+        let turn = parseInt(turnInput.value);
+        if (!isNaN(turn)) {
+            updateBoard(turn);
+        }
+    });
+
+    prevTurnButton.addEventListener("click", function() {
+        let turn = Math.max(0, parseInt(turnInput.value) - 1);
+        turnInput.value = turn;
+        updateBoard(turn);
+    });
+
+    nextTurnButton.addEventListener("click", function() {
+        let turn = Math.min({{max_turn}}, parseInt(turnInput.value) + 1);
+        turnInput.value = turn;
+        updateBoard(turn);
+    });
+
+    updateBoard(0);
+</script>
+
+</body>
+</html>
