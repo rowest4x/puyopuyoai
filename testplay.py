@@ -21,7 +21,7 @@ GAME_NUM = 1000
 MOVE_PER_GAME = 50
 
 # ディレクトリとモデルの指定
-LOG_DIR_PATH = "/mnt/c/Users/rowes/wsl/puyo/log/20251028024300"
+LOG_DIR_PATH = "log/20251028024300"
 MODEL_NUM = 4
 
 # 関数定義 =======================================================================
@@ -144,3 +144,4 @@ with open(result_dir_path + "/testplay.json", "w", encoding="utf-8") as f:
     
 np.save(result_dir_path + "/tsumo_seeds", tsumo_seeds)
 np.save(result_dir_path + "/action_logs", action_logs)
+
