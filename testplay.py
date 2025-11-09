@@ -22,7 +22,7 @@ MOVE_PER_GAME = 50
 
 # ディレクトリとモデルの指定
 LOG_DIR_PATH = "log/20251028024300"
-MODEL_NUM = 4
+MODEL_NUM = 99
 
 # 関数定義 =======================================================================
 def getBoardsActionsAlives(actors:list[Actor]):
@@ -144,4 +144,5 @@ with open(result_dir_path + "/testplay.json", "w", encoding="utf-8") as f:
     
 np.save(result_dir_path + "/tsumo_seeds", tsumo_seeds)
 np.save(result_dir_path + "/action_logs", action_logs)
+
 
