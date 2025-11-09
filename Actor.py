@@ -91,7 +91,7 @@ class Actor(Player):
         Q_n_ago = None
         if(self.step >= multi_step_num):
             td_n_ago = discount**multi_step_num * maxQ - self.Q_list[-multi_step_num]
-            td_n_ago = sum([discount**(multi_step_num - i) * self.r_list[-i] for i in range(1, multi_step_num+1)])
+            td_n_ago += sum([discount**(multi_step_num - i) * self.r_list[-i] for i in range(1, multi_step_num+1)])
             x_n_ago = self.x_list[-multi_step_num]
             Q_n_ago = self.Q_list[-multi_step_num]
 
@@ -263,5 +263,6 @@ class Actor(Player):
         for _action in np.argsort(q)[::-1]:
             if(self.putPuyoByNum(_action)):
                 return _action
+
 
         return action
