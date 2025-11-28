@@ -23,7 +23,6 @@ import io
 
 
 # 乱数seed関連の設定============================================================================================
-# tensorflow 2.09以前では再現性が確保できていたが、2.10以降では未確認。消してもいいかも
 
 # 環境変数の設定
 os.environ['PYTHONHASHSEED'] = '100'
@@ -255,5 +254,6 @@ with open(log_dir_path + "/conditions.json", "w", encoding="utf-8") as f:
             "DISCOUNT" : DISCOUNT,
             "model": model_summary_str,
             "total_time" : f"{total_time//3600}:{(total_time//60)%60:0>2}:{total_time%60:0>2}"}
+
 
     json.dump(data, f, ensure_ascii=False, indent=4)
