@@ -21,7 +21,7 @@ GAME_NUM = 1000
 MOVE_PER_GAME = 50
 
 # ディレクトリとモデルの指定
-LOG_DIR_PATH = "log/20251028024300"
+LOG_DIR_PATH = "log/20251128222558"
 MODEL_NUM = 99
 
 # 関数定義 =======================================================================
@@ -125,7 +125,7 @@ maxchains, intscores, tsumo_seeds, action_logs = play(model)
 mean_maxchain = np.mean(maxchains)
 mean_intscore = np.mean(intscores)
 hist, bins = np.histogram(maxchains, bins=[i-0.5 for i in range(21)])
-hist = [f"{n:>3}" for n in hist]
+hist = hist.tolist()
 
 end_time = time.time()
 print(f"time:{end_time-start_time:.2f}s, mean_intreward:{mean_intscore:.3f}, mean_maxchain:{mean_maxchain:.3f}, max_chain hist:{hist}")
@@ -139,7 +139,8 @@ with open(result_dir_path + "/testplay.json", "w", encoding="utf-8") as f:
             "model" : model_path,
             "time" : end_time-start_time,
             "mean_intscore" : mean_intscore,
-            "mean_maxchain" : mean_maxchain}
+            "mean_maxchain" : mean_maxchain,
+            "maxchain_hist":hist}
     json.dump(data, f, ensure_ascii=False, indent=4)
     
 np.save(result_dir_path + "/tsumo_seeds", tsumo_seeds)

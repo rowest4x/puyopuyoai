@@ -198,7 +198,7 @@ for generation in range(model_num + 1, GENERATION_NUM):
     hist, bins = np.histogram(maxchains, bins=[i-0.5 for i in range(21)])
     hist_log[generation, :] = hist
     reward_log[generation, :] = intrewards
-    hist = [f"{n:>3}" for n in hist]
+    hist = hist.tolist()
     
     # 学習するためにtd誤差を計算（色を入れ替えた物についても計算）
     N = x_train.shape[0]
@@ -236,7 +236,7 @@ for generation in range(model_num + 1, GENERATION_NUM):
     np.save(log_dir_path + f"/maxchain_hist_log/{generation:0>4}.npy", hist_log)
     np.save(log_dir_path + f"/intreward_log/{generation:0>4}.npy", reward_log)
     with open(log_dir_path + "/learn_log.ndjson", "a", encoding="utf-8") as f:
-        data = {"time_all" : now_time-start_time_all+time_bias, "time":now_time-start_time, "generation":generation, "mean_intreward":mean_intreward, "mean_maxchain":mean_maxchain, "max_chain_hist":hist}
+        data = {"time_all" : now_time-start_time_all+time_bias, "time":now_time-start_time, "generation":generation, "mean_intreward":mean_intreward, "mean_maxchain":mean_maxchain, "maxchain_hist":hist}
         f.write(json.dumps(data, ensure_ascii=False) + "\n")
 
 
