@@ -35,13 +35,14 @@
     python learn.py
     ```
     学習後のモデルは`log/<datetime>/model/`に保存されます。また、`log`ファイルには学習の経過も記録されます。  
+    保存後は`<datatime>`のディレクトリ名を変更しても大丈夫です。  
 
 - **testplay.py**  
     `learn.py`で学習したモデルを使って指定回数ゲームをプレイします。以下のように実行します。使用するモデルは`testplay.py`の中に直書きしているので都度書き換えてください。  
     ```
     python testplay.py
     ```
-    プレイ結果は`log/<datetime>/testplay/`に保存されます。  
+    プレイ結果は`log/<dirname>/testplay/`に保存されます。  
 
 - **play_log.py**  
     `testplay.py`で行われたプレイを確認するプログラムです。以下のように実行します。  
