@@ -4,7 +4,7 @@ import puyothon as puyo
 from Player import Player
 from Actor import Actor
 from TsumoLoader import TsumoLoader
-from model import makeModel, Res_Block
+from model import makeModel, loadModel
 import time
 import tensorflow as tf
 from itertools import permutations
@@ -65,6 +65,13 @@ MULTI_STEP_NUM = 3 # multi-step learning のステップ数
 
 TRAIN_SIZE = 100000 # 一世代あたりに学習する訓練データの数
 BATCH_SIZE = 256
+
+RESUME_FROM_CHECKPOINT = False # 途中から学習するとき True にする
+CHECKPOINT_LOG_DIR_PATH = None # 途中から学習するときに指定する
+# 例: LOG_DIR_PATH = log/20250322172134
+CHECKPOINT_MODEL_NUM = None # 途中から学習するときに指定する
+# 例: MODEL_NUM = 49 （log/20250322172134/model/0049.kerasを使って学習再開するとき）
+
 
 
 #  GAME_NUM個のゲームを並列にプレイする関数 ===========================================================================================
@@ -146,32 +153,32 @@ def play(model):
 
 
 # モデルの作成・読み込み =================================================================================================================
+
 start_time_all = time.time()
 time_bias = 0
+log_dir_path : str
 model_num = -1
+model = None
 
-# 新しく学習するとき
-model = makeModel()
-datetime_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-log_dir_path = f"log/{datetime_str}"
-os.makedirs(log_dir_path)
-os.mkdir(log_dir_path + "/model")
-os.mkdir(log_dir_path + "/maxchain_hist_log")
-os.mkdir(log_dir_path + "/intreward_log")
-# 新しく学習するときここまで
+if not RESUME_FROM_CHECKPOINT: # 新しく学習するとき
+    model = makeModel()
+    datetime_str = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    log_dir_path = f"log/{datetime_str}"
+    os.makedirs(log_dir_path)
+    os.mkdir(log_dir_path + "/model")
+    os.mkdir(log_dir_path + "/maxchain_hist_log")
+    os.mkdir(log_dir_path + "/intreward_log")
 
-
-# 途中から学習するとき（モデルのパスを指定する）
-# log_dir_path = "log/20250322172134"
-# model_num = 2
-# model = tf.keras.models.load_model(log_dir_path + f"/model/{model_num:0>4}.keras", custom_objects={'Res_Block': Res_Block})
-# with open(log_dir_path + "/lean_log.ndjson", "r", encoding="utf-8") as f:
-#     lines = f.readlines()
-#     if lines:
-#         last_line = lines[model_num]
-#         last_log = json.loads(last_line)
-#         time_bias = last_log["time_all"]
-# 途中から学習するときここまで
+else: #途中から学習するとき
+    log_dir_path = CHECKPOINT_LOG_DIR_PATH
+    model_num = CHECKPOINT_MODEL_NUM
+    model = loadModel(log_dir_path + f"/model/{model_num:0>4}.keras")
+    with open(log_dir_path + "/learn_log.ndjson", "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        if lines:
+            last_line = lines[model_num]
+            last_log = json.loads(last_line)
+            time_bias = last_log["time_all"]
 
 
 

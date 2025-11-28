@@ -2,7 +2,7 @@ import numpy as np
 import random
 import puyothon as puyo
 from Actor import Actor
-from model import makeModel, Res_Block
+from model import loadModel
 import time
 import tensorflow as tf
 import datetime
@@ -102,7 +102,7 @@ def play(model):
 # テストプレイ======================================================================================================
 
 model_path = f"{LOG_DIR_PATH}/model/{MODEL_NUM:0>4}.keras"
-model = tf.keras.models.load_model(model_path, custom_objects={'Res_Block': Res_Block})
+model = loadModel(model_path)
 
 model.summary()
 print("")

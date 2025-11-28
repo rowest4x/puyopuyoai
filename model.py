@@ -46,3 +46,7 @@ def makeModel():
     model.compile(loss=Huber(), optimizer="adam")
     model.summary()
     return model
+
+def loadModel(path):
+    model = tf.keras.models.load_model(path, custom_objects={'Res_Block': Res_Block})
+    return model
